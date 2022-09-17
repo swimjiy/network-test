@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    localStorage.setItem('username', '아무개');
+    localStorage.setItem('age', '20');
+    localStorage.setItem('password', '12345678');
+    const request = indexedDB.open('library');
+    let db;
+    request.onupgradeneeded = function() {
+      const db = request.result;
+      const store = db.createObjectStore("books", { keyPath: "isbn" });
+      const titleIndex = store.createIndex("by_title", "title", { unique: true });
+      const authorIndex = store.createIndex("by_author", "author");
+      store.put({ title: "개발자로 성장하기", author: "김네트", isbn: 123456 });
+      store.put({ title: "한 권으로 끝내는 HTTP", author: "이워크", isbn: 234567 });
+      store.put({ title: "대세는 Indexed DB", author: "박디비", isbn: 345678 });
+    }
+    request.onsuccess = function() {
+      db = request.result;
+    };
+  </script>
+</body>
+</html>
